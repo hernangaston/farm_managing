@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <br><br>
+    <h1 class="display-6 text-center">{{ message }}</h1>
+    <br><br>
+    <div class="container-fluid">
+        {{ object }}
+    </div>
+        
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        /*$(function(){
+            
+            $("#enviardatos").on('click', function(){
+                $.ajax({
+                    url: "{% url 'fyp:list-pagos' %}",
+                    type: "POST",
+                    data: {id:51},
+                    dataType: 'json'
+                }).done(function(data){
+                    console.log(data);
+                }).fail(function(xhqr, error_status, error_type){
+                    console.log(error_status +' : ' + error_type);
+                }).always(function(data){
+                    console.log('peticion completa');
+                });
+            });
+            
+        });*/
+    </script>   
+{% endblock %}

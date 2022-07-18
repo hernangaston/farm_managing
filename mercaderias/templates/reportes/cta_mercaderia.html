@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+{% load static %}
+{% block head %}
+<script src="{% static 'lib/js/highcharts-9.3.3/code/highcharts.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/exporting.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/export-data.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/accessibility.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <h1 class="text-center py-2">{{ message }}</h1>
+      <div class="col-10">
+        {% if object_list %}   
+          {% for d in data%}
+            <p>{{ d.producto }} = {{ d.total }} </p>
+          {% endfor %}
+        {% else %}
+            <p>NO HAY VALORES PARA GENERAR REPORTE</p>
+        {% endif %}            
+      </div>        
+      <div class="col-2">
+          <h3 class="text-center">Selección</h3>
+          <form class="text-center" action="." method='GET'>
+            <div class="form-floating">
+              <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="producto" id="">Producto
+                <option value="">----------</option>
+                <option value="soja">Soja</option>
+                <option value="trigo">Trigo</option>
+                <option value="maiz">Maíz</option>
+                
+              </select>
+              <label for="floatingSelectProducto">Producto</label>
+            </div> 
+            <div class="form-floating">
+              <select id="floatingSelectCampania" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="campania" id="">Campaña
+                <option value="">-----------</option>
+                {% for campania in campanias %}
+                <option value="{{ campania }}">{{ campania }}</option>
+                {% endfor %}
+                              
+              </select>
+              <label for="floatingSelectCampania">Campaña</label>
+            </div> 
+            
+            <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+          </form>
+      </div>
+</div>
+{% endblock %}

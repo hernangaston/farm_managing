@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="row text-center py-3">
+    <h1>{{ message }}</h1>
+    
+      <form method="POST" action=".">
+        {% csrf_token %}
+        <div class="col-6 offset-3 text-start py-3">
+          
+        {% for el in form %}
+          <p>{{ el.label }}: {{ el }}</p>
+          <p>{{ el.help_text }}</p>
+          {% if el.errors %}
+            <div class="alert alert-danger py-0" role="alert">
+              <p> {{ el.errors }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-sm btn-success">Regístrate</button>
+      </div>
+      </form>
+    
+  </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        
+    </script>   
+{% endblock %}

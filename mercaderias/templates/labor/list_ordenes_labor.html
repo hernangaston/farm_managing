@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1> 
+    {% if object_list %}  
+        <div class="row">
+            <div class="col-8 offset-1">
+           {% for obj in object_list %}
+           <hr>                       
+                <p><b>Titular: </b>{{ obj.titular }}</p>      
+                <p><b>{{ forloop.counter }}-</b>Orden: {{ obj.pk }} | Fecha: {{ obj.fecha }} | {{ obj.contratista }} | {{ obj.labor }} | {{ obj.tipo_labor }}</p>
+                {% for campo in obj.campo.all %}
+                    <p>Campo: {{ campo }} Has: {{ campo.hectareas }} </p>
+                {% endfor %}   
+                {% for it in obj.item.all %}
+                    <p>{{ it.insumo }}: {{it.dosis}}</p>
+                {% endfor %} 
+                <h4>Has. totales: {{ obj.total_has }}</h4>
+                <h3>Totales por labor:</h3>
+                {% for t in obj.total_ismo %}
+                    <p>Producto: {{ t.producto }} - Total utitlizado: {{ t.total }}</p>
+                {% endfor %}
+                <form method="POST" action="{% url 'mer:delete-labor' obj.pk %}">
+                    {% csrf_token %}<input class="btn btn-sm btn-danger" type="submit" value="BORRAR">
+                </form>
+           {% endfor %}
+            </div>
+            <div class="col-3">
+                <h2>total productos utilizados</h2>
+                {% for t in totales %}
+                    <p>{{ t.a}} - {{t.tt}}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="text-end p-5">
+            <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Volver</a>
+        </div>
+        
+    {%elif listado_stock %}
+    
+    <p>{{ listado_stock }}</p>
+
+    {% else %}
+        <div class="row">
+            <h3>NO HAY  LABORES</h3>
+            <div class="row text-start font-size-small">
+                <a href="{% url 'mer:list-contratos-cp' %}" class="link-dark py-3">Volver</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  
+{% endblock %}

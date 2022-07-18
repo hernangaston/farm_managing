@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<br><br>
+<h1 class="display-6 text-center">{{ message }}</h1>
+<br><br>
+<form action="." method="post">
+    {% csrf_token %}
+    <p>{{ form.fecha.label }}: {{ form.fecha }}</p>
+    <p>{{ form.fecha_instrumento.label }}: {{ form.fecha_instrumento }}</p>
+    <p>{{ form.instrumento.label }}: {{ form.instrumento }}</p>
+    <p>{{ form.proveedor.label }}: {{ form.proveedor }}</p>
+    <p>{{ form.numero_instrumento.label }}: {{ form.numero_instrumento }}</p>
+    <p>{{ form.institucion_instrumento.label }}: {{ form.institucion_instrumento }}</p>
+    <p>{{ form.importe.label }}: {{ form.importe }}</p>
+
+    <div class="col text-center">
+        <input type="submit" value="Submit" class="btn btn-secondary">
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}    
+    <script>
+        $(document).ready(function() {
+            
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha"]');
+            const elem2 = document.querySelector('input[name="fecha_instrumento"]');
+            l = [elem, elem2];
+            for(e of l){
+                    const datepicker = new Datepicker(e, {
+                    'autohide': true,
+                    'format': 'dd/mm/yyyy'
+                });
+            }
+
+        });
+    </script>
+{% endblock %}

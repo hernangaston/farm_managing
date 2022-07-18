@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <div class="row px-2">
+        <h2 class="text-center">{{ message }}</h2>
+
+        <div class="col-12">
+           
+           
+            <table id="tabla_facturas" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Fecha Vto.</th>
+                        <th scope="col">Numero</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Subtotal</th>
+                        <th scope="col">Impuesto</th>
+                        <th scope="col">Otro</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Rubro</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
+                </tbody>
+            </table>
+            
+           
+        </div>
+        
+    </div>
+
+  
+    
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+      $(function(){
+            llamarAjax('all');
+            $("#filtro_pendientes").on('click', function(){
+              event.preventDefault();
+              llamarAjax(false);
+            });
+            $("#filtro_pagadas").on('click', function(){
+              event.preventDefault();
+              llamarAjax(true);
+            });            
+        });       
+
+    function llamarAjax(data){         
+        $.ajax({
+            url: "{% url 'fyp:list-facturas' %}",
+            type: "GET",
+            dataType: 'json',
+            data: {'data': data},
+            success: function (response){
+                console.log(response)
+                $('#tabla_facturas tbody').html("");
+                for(let i=0; i < response.length; i++){
+                    let fila = '<tr>';
+                    fila+= '<td>'+(i+1)+'</td>';
+                    fila+= '<td>'+response[i]['fields']['fecha_vto']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['numero']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['proveedor']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['subtotal']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['impuesto']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['otro_importe']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['total']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['rubro']+'</td>';
+                    fila+= '<td>'+response[i]['fields']['estado_pago']+'</td>';
+                    fila+='</tr>';
+                    $('#tabla_facturas tbody').append(fila);
+                };
+                $('#tabla_facturas').DataTable({
+                    language: {
+                        decimal: "",
+                        emptyTable: "No hay información",
+                        info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                        infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                        infoPostFix: "",
+                        thousands: ",",
+                        lengthMenu: "Mostrar _MENU_ Entradas",
+                        loadingRecords: "Cargando...",
+                        processing: "Procesando...",
+                        search: "Buscar:",
+                        zeroRecords: "Sin resultados encontrados",
+                        paginate: {
+                            first: "Primero",
+                            last: "Ultimo",
+                            next: "Siguiente",
+                            previous: "Anterior",
+                        },
+                    },
+                });
+
+               
+            }, 
+            error: function (error){
+                console.log(error);
+            }
+        });
+    };
+    </script>   
+{% endblock %}

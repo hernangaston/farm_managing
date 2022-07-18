@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>GESTION DE COMPROBANTES Y PAGOS</title>
+    <link rel="icon" href="../static/img/espiga6.png">
+
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/DataTables/datatables.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/css/bootstrap-icons-1.7.1/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/adminweb.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker.min.css">
+    <!-- JavaScript Bundle with Popper -->
+    <script type="text/javascript" src="{% static 'lib/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
+    <script type="text/javascript" src="{% static 'lib/js/jquery_chained-2.x/jquery.chained.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/js/vue.js' %}"></script>  
+    <script type="text/javascript" src="{% static 'lib/DataTables/datatables.min.js' %}"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
+
+    {% block head %}
+
+    {% endblock %}
+</head>
+<body>  
+  <div id="contenedor" class="container-fluid m-0 p-0">
+    <!--NAVIGATION BAR-->
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid px-5">
+        <a class="navbar-brand" href="#"><img src="../static/img/espiga7.svg" width="30" height="30"alt="fotologo">
+        helper</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+          {% if user.is_authenticated %}
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <span class="nav-link"><i class="bi bi-person-circle bi-sm"></i> Hola {{ user.get_username|capfirst }} {{ request.user.id|json_script:"user_id" }}!!</span>
+              </li>
+              <li class="nav-item">
+
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'close-session' %}"><i class="bi bi-door-closed"></i> Salir</a>
+              </li>
+            </ul>
+          {% else %}
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Servicios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Caracteristicas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-decoration-none" href="#">Contacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-decoration-none" href="{% url 'login' %}"><i class="bi bi-person-circle"></i> Ingresa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-decoration-none" href="{% url 'registro' %}">CREA UNA CUENTA</a>
+            </li>
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    {% if user.is_authenticated %}
+      {% if request.session.empresa %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid px-5">
+              Representando a: {{ request.session.empresa }}
+              <a class="text-decoration-none px-2" data-bs-toggle="modal" data-bs-target="#exampleModal" href="{% url 'fyp:change-empresa' user.id %}">
+                  <i class="bi bi-people"></i> 
+              </a>
+              <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                  <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      COMPROBANTES
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li> <a href="{% url 'fyp:create-empresa' %}" class="dropdown-item">EMPRESA</a></li>
+                      <li> <a href="{% url 'fyp:list-empresa' %}" class="dropdown-item">LISTA EMPRESAS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:list-facturas' %}">LISTAR FACTURAS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-facturas' %}">AGREGAR FACTURA</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-nota-de-credito' %}">AGREGAR NOTA DE CREDITO</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-nota-de-debito' %}">AGREGAR NOTA DE DEBITO</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:list-pagos' %}">LISTAR PAGOS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-pagos' %}">AGREGAR PAGO</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:list-articulos' %}">LISTAR ARTICULOS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-articulo' %}">AGREGAR ARTICULO</a></li>              
+                      <li><a class="dropdown-item" href="{% url 'fyp:list-proveedores' %}">LISTAR PROVEEDORES</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:add-proveedor' %}">AGREGAR PROVEEDOR</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:cuenta-corriente-proveedor' %}">LISTADOS CUENTAS CORRIENTES</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:list-instrumentos' %}">BANCO</a></li>
+                  </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      MERCADERIAS
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'mer:crear-cp' %}">INGRESAR CARTA DE PORTE</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:lista-cp' %}">LISTA CARTAS DE PORTE</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:lista-descargas-cp' %}">LISTA DESCARGADAS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:aplica-cp' %}">APLICAR CARTA DE PORTE</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:list-contratos-cp' %}">LISTA CONTRATOS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:contratos-cp' %}">INGRESAR CONTRATOS</a></li>                     
+                      <li><a class="dropdown-item" href="{% url 'mer:crear-fijacion' %}">INGRESAR FIJACIONES</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:listar-stock' %}">STOCK PRODUCTOS</a></li>
+                  </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      LABORES
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'mer:listar-labor' %}">LABORES</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:crear-labor' %}">INGRESAR LABOR</a></li>                      
+                  </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      ARRENDAMIENTOS
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'mer:crear-arrendamiento' %}">NUEVO</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:listar-arrendamientos' %}">LISTA</a></li>      
+                      <li><a class="dropdown-item" href="{% url 'mer:crear-lote' %}">NUEVO LOTE</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:listar-lotes' %}">LISTA LOTES</a></li>                
+                  </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      REPORTES
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'mer:reportes' %}">MERCADERIAS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:planes' %}">SUP. SEMBRADA</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:reporte-comprobantes' %}">COMPROBANTES</a></li>
+                      <li><a class="dropdown-item" href="{% url 'fyp:reporte-costos' %}">COSTOS</a></li>
+                      <li><a class="dropdown-item" href="{% url 'mer:existencias' %}">EXISTENCIAS</a></li>
+                  </ul>
+                  </li>
+                  
+              </ul>
+              </div>
+          </div>
+        </nav>
+      {% else %}
+      <div class="row p-0 m-0 bg-light navbar-light fs-6">
+        <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Seleccione empresa
+        </button>
+      </div>
+      {% endif %}   
+    {% endif %}
+    <!--END NAVIGATION BAR-->
+    {% block index %}
+    {% endblock %}
+    
+    {% block content %}
+    <div class="gardient invertgardient"> 
+      <div class="otrodiseñoprincipal p-5">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-1">
+            <h1 class="tituloprincipal">Software de gestion agropecuaria.</h1>
+            <h3 class="titulosecundario">Trabaja con una herramienta a la medida de tu empresa desde cualquier lugar.</h3>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-1">            
+            <div class="cover2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row contenidocentral">      
+        <div class="col-lg-3 col-md-6 col-sm-1 p-5">
+          <div class="columnas sombras text-center px-2">
+            <p class="iconos"><i class="bi bi-file-earmark-text"></i></p>
+            <h2>Comprobantes</h2>
+            <p>Generación de recibos, órdenes de pago, ordenes de labor y mas..</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-1 p-5">
+          <div class="columnas sombras text-center px-2">
+            <p class="iconos"><i class="bi bi-graph-up"></i></p>
+            <h2>Reportes</h2>
+            <p>Reportes e informes de gastos, control de stock y produccion</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-1 p-5">
+          <div class="columnas sombras text-center px-2">
+            <p class="iconos"><i class="bi bi-truck"></i></p>
+            <h2>Mercaderías</h2>
+            <p>Permite un control detallado de los contratos de compra-venta de mercaderías y la camiones aplicados.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-1 p-5">
+          <div class="columnas sombras text-center px-2">
+            <p class="iconos"><i class="bi bi-pencil-square"></i></p>
+            <h2>Arrendamientos</h2>
+            <p>Gestion de los contratos de arrendamiento, pagos realizados y renovaciones.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row segundocontenidocentral p-5 fs-5">
+        <div class="col-lg-2 offset-lg-3 2 col-md-4 col-sm-12 p-3 text-center test1">
+          <div class="container conenedorplanes sombras ">
+            <h2 class="py-2">Plan Básico</h2>            
+            <p class="text-start">Incluye:</p>
+            <ul class="text-start">
+              <li>Comprobantes</li>
+              <li>Mercaderías</li>
+            </ul>     
+            <div class="test2">
+              <span>Coste U$S 30,00</span>
+            </div>
+          </div>        
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12 p-3 text-center test1">
+          <div class="container conenedorplanes sombras">
+            <h2 class="py-2">Plan Intermedio</h2>            
+            <p class="text-start">Incluye:</p>
+            <ul class="text-start">
+              <li>Comprobantes</li>
+              <li>Mercaderías</li>
+              <li>Arrendamientos</li>
+            </ul>      
+            <div class="test2">
+              <span>Coste U$S 55,00</span>
+            </div>     
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12 p-3 text-center test1">
+          <div class="container conenedorplanes sombras">
+            <h2 class="py-2">Plan Full</h2>
+            <p class="text-start">Incluye:</p>
+            <ul class="text-start">
+              <li>Comprobantes</li>
+              <li>Mercaderías</li>
+              <li>Arrendamientos</li>
+              <li>Reportes</li>
+            </ul>
+            <div class="test2">
+              <span>Coste U$S 80,00</span>
+            </div>
+          </div>
+        </div>      
+      </div>
+      <footer>
+        <div class="row footerclase">
+          <div class="col-lg-6 col-md-12 col-sm-12"></div>
+        </div>
+        <div class="row text-center copyrigthcss">
+          <p class="text-center text-dark">COPYRIGHT &copy; Cathel Co.</p>
+        </div>
+      </footer>
+    </div>
+    {% endblock %}
+  </div>
+  
+  
+  {% block scripts %} 
+  
+  {% endblock %}
+
+
+</body>
+</html>

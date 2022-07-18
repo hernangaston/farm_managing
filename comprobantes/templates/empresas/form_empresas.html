@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="row p-0 m-0">
+    <div class="col-10 offset-1">
+        <h1 class="display-6 text-center py-3">{{ message }}</h1>
+            <form action="." method="post">
+                {% csrf_token %}        
+                    {{ form.as_p }}            
+                <button class=" btn btn-success" type="submit">Enviar</button>
+            </form>
+    </div> 
+    <div class="col-1 offset-10 text-end">
+        <a href="{% url 'fyp:index' %}" class="btn btn-danger btn-sm">Volver</a>
+    </div> 
+</div>
+{% endblock %}
+
+{% block scripts %}    
+    
+{% endblock %}

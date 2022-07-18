@@ -1,0 +1,43 @@
+{% extends "index.html"%}
+
+{% block content %}
+    <div class="row text-center py-3">
+    <h3>{{ message }}</h3>
+    </div>
+    <div class="row p-3">
+        <div class="col-10">
+        <table class="table table-hover table-sm">
+            <tbody>
+                <th>#</th>
+                <th>Propietario</th>
+                <th>Campo</th>
+                <th>Hectáreas</th>
+                <th>Tons. por ha.</th>
+                <th>Tons. Totales</th>
+                <th>Fin ctto.</th>
+                <th>Acciones</th>
+                {% for obj in object_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ obj.arrendador }}</td>
+                        <td>{{ obj.lote.campo }}</td>
+                        <td>{{ obj.lote.hectareas }}</td>
+                        <td>{{ obj.toneladas_x_ha }}</td>
+                        <td>{{ obj.tt_totales }}</td>
+                        <td>{{ obj.fecha_fin }}</td>
+                        <td><form method="POST" action="{% url 'mer:eliminar-arrendamiento' obj.pk %}">
+                            {% csrf_token %}<input class="btn btn-sm btn-danger" type="submit" value="X">
+                        </form></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <div class="col-2">
+            Filtros
+        </div>    
+    </div>
+    <div class="row text-start">
+        <h5>Hectareas totales: {{total_has}}</h5>
+    </div>
+{% endblock %}

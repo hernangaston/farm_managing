@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center">CONFIRMA ELIMINAR CP</h1>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        
+
+        <p>SEGURO QUE QUIERE ELIMINAR LA CP <b>"{{ object }}"</b>?</p>
+        
+        
+        <input class="btn btn-danger" type="submit" value="Confirmar">
+    </form>
+{% endblock %}

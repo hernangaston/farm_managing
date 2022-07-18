@@ -1,0 +1,104 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1> 
+    <div class="row">
+        <div class="col-10">
+    {% if listado_stock %}  
+        <div class="row">
+           {% for obj in listado_stock %}
+           <h1>{{obj.factura}}</h1>
+                <p>{{ obj.articulo }}</p>
+                <p>{{ obj.cantidad }}</p>
+                <p>{{ obj.precio_unitario }}</p>
+           <hr>
+           {% endfor %}
+           
+        </div>
+        <div class="text-end p-5">
+            <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Volver</a>
+        </div>
+    {% elif totales_stock %}
+        <div class="row">
+            <div class="col-4 text-center"><h2>Entradas</h2></div>
+            <div class="col-4 text-center"><h2>Salidas</h2></div>
+            <div class="col-4 text-center"><h2>Saldo</h2></div>
+            <hr>
+            <div class="col-2">
+                <h2>PRODUCTO</h2>
+            </div>
+            <div class="col-1 offset-1">
+                <h2>TOTAL</h2>
+            </div>
+            <div class="col-2">
+                <h2>PRODUCTO</h2>
+            </div>
+            <div class="col-1 offset-1">
+                <h2>TOTAL</h2>
+            </div>
+            <div class="col-2">
+                <h2>PRODUCTO</h2>
+            </div>
+            <div class="col-1 offset-1">
+                <h2>TOTAL</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+            {% for el in totales_stock %}            
+            <div class="row py-1">
+                <div class="col-10">{{ forloop.counter }}- {{ el.articulo}}</div>
+                <div class="col-2">{{ el.total }}</div>
+            </div>        
+            
+            {% endfor %}
+            </div>
+            <div class="col-4">                
+                {% for el in totales_stock_usados%}
+                <div class="row py-1">
+                    <div class="col-10">{{ forloop.counter }}- {{ el.articulo}}</div>
+                    <div class="col-2">{{ el.total_usado }}</div>
+                </div> 
+                {% endfor %}
+            </div>
+            <div class="col-4">
+                {% for el in saldo_final%}
+                <div class="row py-1">
+                    <div class="col-9">{{ forloop.counter }}- {{ el.articulo}}</div>
+                    <div class="col-2">{{ el.s }}</div>
+                </div> 
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <h3>NO HAY ARTICULOS</h3>
+            <div class="row text-start font-size-small">
+                <a href="{% url 'mer:list-contratos-cp' %}" class="link-dark py-3">Volver</a>
+            </div>
+        </div>
+    {% endif %}
+        </div>
+        <div class="col-2 px-3">
+            <h3 class="text-center">Selección</h3>
+            <form class="text-center" action="." method='GET'>
+              <div class="form-floating text-start">
+                <div>
+                <label for="floatingSelectProducto">Tipo</label>
+                <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="tipo" id="">Producto
+                  <option value="">--------</option>
+                  <option value="AGROQUIMICOS">AGROQUIMICOS</option>
+                  <option value="SEMILLAS">SEMILLAS</option>
+                  <option value="FERTILIZANTES">FERTILIZANTES</option>
+                </select>
+                
+                </div>        
+              <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  
+{% endblock %}

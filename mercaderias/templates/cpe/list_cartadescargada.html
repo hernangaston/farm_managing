@@ -1,0 +1,117 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h2 class="text-center py-5">{{ message }}</h2> 
+        {% if object_list %}  
+            <div class="row">
+                <div class="col-10">
+                    <div class="row">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Numero</th>
+                                    <th scope="col">Procedencia</th>
+                                    <th scope="col">Comprador</th>
+                                    <th scope="col">Producto</th>
+                                    <th scope="col">Ctto.</th>
+                                    <th scope="col">Kilos descargados</th>
+                                    <th scope="col">Merma</th>
+                                    <th scope="col">Aplicados</th>
+                                    <th scope="col">Obs</th>
+                                    <th scope="col">Acciones</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for carta in object_list%}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}.-{{ carta.cp.fecha | date:"SHORT_DATE_FORMAT" }}</th>
+                                    <td>{{ carta }}</td>
+                                    <td>{{ carta.cp.establecimiento|truncatechars:10 }}</td>
+                                    <td>{{ carta.cp.destino|truncatechars:10 }}</td>
+                                    <td>{{ carta.cp.grano }}</td>
+                                    <td>{{ carta.contrato.numero }}</td>
+                                    <td>{{ carta.kilos_descargados }}</td>
+                                    <td>{{ carta.kilos_merma }}</td>
+                                    <td>{{ carta.kgs_finales }}</td>        
+                                    <td>{{ carta.observaciones_descarga }}</td>      
+                                    
+                                    <td>                                    
+                                        <a class="btn btn-sm btn-warning" href="{% url 'mer:editar-aplicacion-cp' carta.pk %}"><i class="bi bi-pencil-square"></i></a>                
+                                        <a class="btn btn-sm btn-danger" href="{% url 'mer:delete-aplicacion-cp' carta.pk %}"><i class="bi bi-trash"></i></a>                            
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>                    
+                        </table>
+                    </div>
+                    <div class="row text-start py-3">
+                        <p>total kilos descargados: {{ total_kgs_descargados }}</p>
+                        <p>total kilos aplicados: {{ total_kgs_aplicados }}</p>
+                    </div>
+                </div>
+                <div class="col-2 px-3">
+                    <h4>Buscar por:</h4>
+                    <form class="text-center" action="." method='GET'>
+                        <div class="form-floating">
+                        <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="producto" id="">
+                            <option value=" ">------------</option>
+                            <option value="soja">Soja</option>
+                            <option value="trigo">Trigo</option>
+                            <option value="maiz">Maíz</option>
+                        </select>
+                        <label for="floatingSelect">Producto</label>
+                        </div> 
+                        <div class="form-floating">
+                        <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">
+                            <option value=" ">------------</option>
+                            <option value="2015/2016">2015/2016</option>
+                            <option value="2016/2017">2016/2017</option>
+                            <option value="2017/2018">2017/2018</option>
+                            <option value="2018/2019">2018/2019</option>
+                            <option value="2019/2020">2019/2020</option>
+                            <option value="2020/2021">2020/2021</option>
+                            <option value="2021/2022">2021/2022</option>
+                        </select>
+                        <label for="floatingSelectCosecha">Cosecha</label>
+                        </div>
+                        <div class="form-floating">
+                            <select id="floatingSelectComprador" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="comprador" id="">
+                                <option value=" ">------------</option>
+                                {% for comprador in compradores %}
+                                    <option value={{comprador.pk}}>{{ comprador }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingSelectComprador">Comprador</label>
+                        </div>
+                        <div class="form-floating">
+                            <select id="floatingSelectCampos" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="campo" id="">Campos
+                                <option value="">-----------</option>
+                                {% for establecimiento in establecimientos %}
+                                <option value={{establecimiento}}>{{establecimiento}}</option>
+                                {% endfor %}                  
+                            </select>
+                            <label for="floatingSelectCampos">Establecimientos</label>
+                        </div> 
+                        
+                        <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="text-end p-5">
+                <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Volver</a>
+            </div>
+        {% else %}
+            <div class="row">
+                <h3>NO HAY CARTAS DESCARGADAS</h3>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  
+{% endblock %}

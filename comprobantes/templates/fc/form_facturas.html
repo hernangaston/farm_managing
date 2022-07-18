@@ -1,0 +1,225 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<div class="row p-0 m-0">
+    <h1 class=" text-center py-5">{{ message }}</h1>
+    <div class="col-10 offset-1">
+        <form id="form-factura" action="." method="post" novalidate>
+            {% csrf_token %}   
+            {{ formset.management_form }}
+            {% if form.errors %}     
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="row py-2">
+                        <div class="col-4">
+                        <b>{{ form.fecha.label }}:</b> {{ form.fecha }}
+                        </div>
+                        <div class="col-4">
+                            <b>{{ form.numero.label }}:</b> {{ form.numero }}
+                        </div>
+                        <div class="col-4">                               
+                            <b>{{ form.proveedor.label }}:</b> {{ form.proveedor }}                        
+                            <a href="{% url 'fyp:add-proveedor' %}" class="btn" target="_blank">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </a>                    
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="col-12">
+                    <div class="row py-2">
+                        <div class="col-4">
+                            <b>{{ form.otro_importe.label }}:</b> {{ form.otro_importe }}
+                        </div>
+                        <div class="col-4">
+                            <b>{{ form.rubro.label }}:</b> {{ form.rubro }}
+                        </div>
+                        <div class="col-4">
+                            <b>{{ form.estado_pago.label }}:</b> {{ form.estado_pago }}
+                        </div>    
+                    </div>
+                </div>  
+
+                <div class="col-12">
+                    <div class="row py-2">
+                        <div class="col-4">
+                            <b>{{ form.cosecha.label }}:</b> {{ form.cosecha }}
+                        </div>
+                        <div class="col-4">               
+                            <b>{{ form.ventas.label }}:</b> {{ form.ventas }}             
+                        </div>
+                        <div class="col-4">
+                            <b>{{ form.fecha_vto.label }}:</b> {{ form.fecha_vto }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row py-2">                               
+                        <div class="col-6">
+                            <b>{{ form.impuesto.label }}:</b> {{ form.impuesto }}
+                        </div>
+                        <div class="col-6">
+                            <b>{{ form.tipo_cambio.label }}:</b> {{ form.tipo_cambio }}
+                        </div>
+                    </div>
+                </div>               
+            </div>
+            <div class="row py-3">
+                <h3 class="text-center py-4">Items</h3>
+                <div id="fs_articulos" class="col-12">
+                    <div class="row">
+                    {% for f in formset %}               
+                        {% if f.errors %}
+                            <ul>
+                            {% for error in f.errors %}
+                                <li>{{ f.label }}: {{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <div class="col-3 offset-1">                            
+                            {{ f.articulo.label }}: {{ f.articulo }}                               
+                        </div>
+                        <div class="col-1 text-start" id="nodo_new_artic">
+                            <a href="{% url 'fyp:add-articulo' %}" class="btn btn-sm"><i class="bi bi-plus-circle-fill"></i>
+                            </a>
+                        </div>
+                        <div class="col-3">
+                            {{ f.cantidad.label }}: {{ f.cantidad }}
+                        </div>
+                        <div class="col-3">
+                            {{ f.precio_unitario.label }}: {{ f.precio_unitario }}
+                        </div>                
+                    {% endfor %}
+                    </div>  
+                </div>                
+            </div>             
+            <div class="row">
+                <div class="col-2 offset-1">
+                    <a id="buttonaddItem" href="." class="btn btn-dark btn-sm">
+                        agregar item factura  <i class="bi bi-plus-circle-fill"></i>
+                    </a> 
+                </div>
+            </div>
+            <div class="col text-center py-4">
+                <input type="submit" value="Submit" class="btn btn-secondary">
+            </div>
+        </form>
+
+        
+    </div>
+
+
+{% if form %}
+    <div class="col-12 text-end p-5">
+        <a href="{% url 'fyp:list-facturas' %}" class="btn btn-danger">Volver</a>
+    </div>
+{% else %}
+    <div class="col-12 text-end p-5">
+        <a href="{% url 'fyp:list-facturas' %}" class="btn btn-danger">Volver a lista</a>
+    </div>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}    
+    <script>
+        $(document).ready(function() {
+            //$("#id_instrumentos").chained("#id_proveedor");
+            //$("#id_facturas").chained("#id_proveedor");
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+            const elem2 = document.querySelector('input[name="fecha_vto"]');
+            const datepicker2 = new Datepicker(elem2, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+
+            $("#buttonaddItem").click((e) =>{
+                e.preventDefault();
+                addItem();
+            });
+            
+        });
+
+        function addItem(){
+            var formset = document.querySelector('#id_item-TOTAL_FORMS');
+            var value = formset.value;
+            var form =$('#fs_articulos');
+            
+            var new_item_articulo = document.querySelector('#id_item-0-articulo').cloneNode(true)
+            new_item_articulo.name = "item-"+value+"-articulo"
+            new_item_articulo.id = "id_item-"+value+"-articulo"
+
+            var new_item_cantidad = document.querySelector('#id_item-0-cantidad').cloneNode(true)
+            new_item_cantidad.name = "item-"+value+"-cantidad"
+            new_item_cantidad.id = "id_item-"+value+"-cantidad"
+
+            var new_item_precio = document.querySelector('#id_item-0-precio_unitario').cloneNode(true)
+            new_item_precio.name = "item-"+value+"-precio_unitario"
+            new_item_precio.id = "id_item-"+value+"-precio_unitario"
+        
+            var div_row = document.createElement('div');
+            var div_col1 = document.createElement('div');
+            var div_col2 = document.createElement('div');
+            var div_col3 = document.createElement('div');
+
+            var div_col4 = document.createElement('div');
+
+            var new_art = document.querySelector('#nodo_new_artic').cloneNode(true)
+
+            var span1 = document.createElement('span');
+            span1.textContent = "Articulo: ";
+
+            var span2 = document.createElement('span');
+            span2.textContent = "Cantidad: ";
+
+            var span3 = document.createElement('span');
+            span3.textContent = "Precio unitario: ";
+
+            div_row.className = "row";
+            div_row.id = "row_id";
+            
+            div_col1.className = "col-3 offset-1";
+            div_col2.className = "col-3";
+            div_col3.className = "col-3";
+            div_col4.className = "col-1";
+            //new_item_articulo.className = "col-3 offset-1"
+            div_col1.append(span1);         
+            div_col1.append(new_item_articulo);
+            div_col4.append(new_art);
+            div_col2.append(span2);
+            div_col2.append(new_item_cantidad);
+            div_col3.append(span3);
+            div_col3.append(new_item_precio);
+
+            //div_row.append(input_hidden);
+            div_row.append(div_col1);
+            div_row.append(div_col4);
+            div_row.append(div_col2);
+            div_row.append(div_col3);
+
+            form.append(div_row)
+
+            formset.value = parseInt(formset.value)+1;
+            
+        };
+           
+    </script>
+{% endblock %}

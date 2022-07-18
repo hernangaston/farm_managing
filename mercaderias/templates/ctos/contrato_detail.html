@@ -1,0 +1,125 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Cto. Comprador</th>
+                <th scope="col">Cto. Vendedor</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Comprador</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Cosecha</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Fecha entrega</th>
+                <th scope="col">Kilos pactados</th>
+                <th scope="col">Kilos aplicados</th>
+                <th scope="col">Kilos pendientes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">{{ object.nro_comprador }}</th>
+                <td>{{ object.nro_vendedor }}</td>
+                <td>{{ object.empresa }}</td>
+                <td>{{ object.comprador}}</td>
+                <td>{{ object.tipo_contrato }}</td>
+                <td>{{ object.producto}}</td>
+                <td>{{ object.cosecha }}</td>
+                <td>{{ object.precio }}</td>
+                <td>{{ object.fecha_inicio_cumplimiento | date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ object.kilos_pactados }}</td>
+                <td>{{ object.kgs_aplicados }}</td>
+                <td>{{ object.kgs_pendientes }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% if object.tipo_contrato == 'FIJAR' %}
+        <div class="row pt-5">
+            <h2 class="text-center">FIJACIONES</h2>
+            <a href="{% url 'mer:crear-fijacion' %}" class="btn btn-link text-end">Ingresar Fijacion</a>
+        </div>
+        <div class="row pt-5">
+            <h2 class="text-center">Pesificaciones</h2>
+            <a href="{% url 'mer:crear-pesificacion' %}" class="btn btn-link text-end">Ingresar Pesificacion</a>
+        </div>
+    {% endif %}
+    {% if pesificaciones %}
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Kilos pesificados</th>
+                    <th>Tipo de cambio</th>
+                    <th>Total Pesos</th>
+                </tr>
+            </thead>
+            <tbody>    
+                {% for p in pesificaciones %}
+                    <tr>
+                        <td>{{ p.fecha | date:"SHORT_DATE_FORMAT" }}</td>
+                        <td>{{ p.kilos_pesificados }}</td>
+                        <td>{{ p.tipo_de_cambio }}</td>
+                        <td>{{ p.total_cambio }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table> 
+        <div class="row">
+            <div class="col-3">Total kgs. pesificados:</div>
+            <div class="col-9">{{ total_kgs_pesificados }}</div>
+            <div class="col-3">Total kgs. pendientes de pesificar:</div>
+            <div class="col-9">{{ pendientes_pesificar }}</div>
+        </div>        
+    {% endif %}
+
+    <div class="row text-center pt-5">
+        <h2>Cartas de porte aplicadas al cto: {{ object.nro_comprador }}</h2>
+    </div>
+    {% if cartas %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Numero</th>
+                    <th>Comprador</th>
+                    <th>Destino</th>
+                    <th>Producto</th>
+                    <th>Kilos aplicados</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carta in cartas %}
+                <tr>
+                    <td>{{ carta.cp.fecha | date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ carta.cp.numero }}</td>
+                    <td>{{ carta.cp.destinatario }}</td>
+                    <td>{{ carta.cp.destino }}</td>
+                    <td>{{ carta.cp.grano }}</td>
+                    <td>{{ carta.kgs_finales }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'mer:delete-aplicacion-cp' carta.pk %}">
+                            {% csrf_token %}<input class="btn btn-sm btn-link" type="submit" value="Eliminar">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="row">
+            <h3>NO HAY CARTAS APLICADAS</h3>
+        </div>
+    {% endif %}
+    <div class="row text-end p-3">
+        <h4>Total kilos aplicados: {{ object.kgs_aplicados }}</h4>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

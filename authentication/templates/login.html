@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+  <div class="row text-center py-3">
+    <h1>{{ message }}</h1>
+      <form method="POST" action="." autocomplete="off" novalidate>
+        {% csrf_token %}
+        <div class="col-6 offset-3 text-start py-3">  
+          {% if messages %}  
+          <div class="row py-0">
+            <div class="col-5">
+              <div class="alert alert-sm alert-danger py-0" role="alert">
+                {% for el in messages %}
+                  <p class="pt-3"> {{ el }} </p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>            
+          {% endif %}      
+          {% for el in form %}
+            <p>{{ el.label }}: {{ el }}</p>
+            <p>{{ el.help_text }}</p>
+          {% endfor %}
+
+          <button type="submit" class="btn btn-sm btn-success">Ingresar</button>
+        </div>
+      </form>
+  </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        
+    </script>   
+{% endblock %}

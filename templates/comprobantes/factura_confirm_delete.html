@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center">CONFIRMAELIMINAR LA FACTURA</h1>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        
+
+        <p>SEGURO QUE QUIERE ELIMINAR LA FACTURA <b>"{{ object }}"</b>?</p>
+        
+        
+        <input class="btn btn-danger" type="submit" value="Confirmar">
+    </form>
+{% endblock %}
+

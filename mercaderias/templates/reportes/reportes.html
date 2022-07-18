@@ -1,0 +1,107 @@
+{% extends "index.html" %}
+{% load static %}
+{% block head %}
+<script src="{% static 'lib/js/highcharts-9.3.3/code/highcharts.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/exporting.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/export-data.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/accessibility.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <h1 class="text-center py-2">{{ message }}</h1>
+    
+    {% if object_list %}   
+        {% if lote %}
+            <p class="text-center py-2">Campo: {{ lote | safe }}</p>
+        {% endif %}
+        <div class="col-10">
+            <figure class="highcharts-figure">
+                <div id="container"></div>
+                <p class="highcharts-description">
+                    Demonstrating a basic area chart, also known as a mountain chart.
+                    Area charts are similar to line charts, but commonly used to visualize
+                    volumes.
+                </p>
+            </figure>
+        </div>
+        
+        <div class="col-2">
+            <h3 class="text-center">Selección</h3>
+            <form class="text-center" action="." method='GET'>
+              <div class="form-floating">
+                <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="producto" id="">Producto
+                  <option value="">----------</option>
+                  <option value="soja">Soja</option>
+                  <option value="trigo">Trigo</option>
+                  <option value="maiz">Maíz</option>
+                  
+                </select>
+                <label for="floatingSelectProducto">Producto</label>
+              </div> 
+              <div class="form-floating">
+                <select id="floatingSelectCampos" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="campo" id="">Campos
+                  <option value="">-----------</option>
+                  {% for campo in lista_campos %}
+                    {% if campo != '' %}
+                    <option value={{campo}}>{{campo}}</option>
+                    {% endif %}
+                  {% endfor %}                  
+                </select>
+                <label for="floatingSelectCampos">Establecimientos</label>
+              </div> 
+              
+              <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+            </form>
+        </div>
+    {% else %}
+        <p>NO HAY VALORES PARA GENERAR REPORTE</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+    
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'RINDE POR CAMPAÑA'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: {{ cosechas|safe }},
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'KILOGRAMOS DE PRODUCTO (Kgs.)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} Kgs</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: {{ listaxcosxlote | safe }}
+    });    
+});
+</script>
+{% endblock %}

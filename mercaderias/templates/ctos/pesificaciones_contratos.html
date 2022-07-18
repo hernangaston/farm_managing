@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1>
+
+    <form action="." method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <p></p>
+
+        <div class="text-end">
+            <input type="submit" value="Submit" class="btn btn-secondary">
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            //$("#id_instrumentos").chained("#id_proveedor");
+            //$("#id_facturas").chained("#id_proveedor");
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+        });
+    </script>  
+{% endblock %}

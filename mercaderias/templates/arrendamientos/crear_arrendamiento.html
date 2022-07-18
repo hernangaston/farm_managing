@@ -1,0 +1,43 @@
+{% extends "index.html"%}
+
+{% block content %}
+    {% if error_campos %}
+        <p>{{ error_campos }}</p>
+    {% else %}
+    <div class="row px-5">
+        <h3 class="py-5 text-center">{{ message }}</h3>
+        <form action="." method="POST" class="text-start" novalidate>
+            {% csrf_token %}   
+            {{form.as_p}}
+            <p class="text-center py-5">
+                <button type="submit" class="btn btn-sm btn-danger text-center">Enviar</button>
+            </p>
+        </form>
+    </div>
+    <div class="row text-end p-5">
+        <p>
+            <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-success">Volver</a>
+        </p>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            //$("#id_instrumentos").chained("#id_proveedor");
+            //$("#id_facturas").chained("#id_proveedor");
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha_inicio"]');
+            const elem2 = document.querySelector('input[name="fecha_fin"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+            const datepicker2 = new Datepicker(elem2, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+        });
+    </script>  
+{% endblock %}

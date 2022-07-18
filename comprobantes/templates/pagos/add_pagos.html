@@ -1,0 +1,92 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<br><br>
+<h1 class="display-6 text-center">{{ message }}</h1>
+<br><br>
+<form action="{% url 'fyp:add-pagos' %}" method="post">
+    {% csrf_token %}
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <p>{{ form.fecha.label }}:
+        {{ form.fecha }}
+    </p>
+    <p>{{ form.proveedor.label }}: 
+        <select id="proveedor" name="proveedor">
+        {% for prov in list_proveedores %}
+                <option value="{{prov.id}}">{{ prov }}</option>
+        {% endfor %}
+        </select>
+        
+        <a href="{% url 'fyp:add-proveedor' %}" class="btn">
+            <i class="bi bi-plus-circle-fill"></i>
+        </a>        
+    </p>
+    
+    <p>{{ form.instrumentos.label }}:</p>
+    <p>
+        <select id="instrumentos" name="instrumentos" multiple>
+            {% for instrumento in list_instrumentos %}
+                <option value="{{instrumento.id}}" data-chained="{{instrumento.proveedor.id}}">
+                    {{ instrumento }}
+                </option>            
+            {% endfor %}
+        </select>      
+        <a href="{% url 'fyp:add-instrumento' %}" class="btn">
+            <i class="bi bi-plus-circle-fill"></i>
+        </a>
+    </p>
+    
+    <p>{{ form.facturas.label }}:</p>
+    <p> 
+        <select id="facturas" name="facturas" multiple>
+            {% for factura in list_facturas %}
+                <option value="{{factura.id}}" data-chained="{{factura.proveedor.id}}">
+                    {{ factura }}
+                </option>            
+            {% endfor %}
+        </select>          
+        <a href="{% url 'fyp:facturas' %}" class="btn">
+            <i class="bi bi-plus-circle-fill"></i>
+        </a>
+    </p>
+
+    <div class="col text-center">
+        <input type="submit" value="Submit" class="btn btn-secondary">
+    </div>
+</form>
+{% if form %}
+    <div class="col text-end">
+        <a href="{% url 'fyp:index' %}" class="btn btn-danger">Volver</a>
+    </div>
+{% else %}
+    <div class="col text-end">
+        <a href="{% url 'fyp:list-pagos' %}" class="btn btn-danger">Volver a lista</a>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}    
+    <script>
+        $(document).ready(function() {
+            $("#instrumentos").chained("#proveedor");
+            $("#facturas").chained("#proveedor");
+            //---------datepicker----------------
+            /*const elem = document.querySelector('input[name="fecha"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'yyyy-mm-dd',
+            });*/
+
+        });
+    </script>
+{% endblock %}

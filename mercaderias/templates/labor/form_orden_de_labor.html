@@ -1,0 +1,125 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="contenedor-form">
+    <h1 class="text-center py-3">{{ message }}</h1>
+
+    <form id="form-labor" action="." method="post" novalidate>
+        {% csrf_token %}   
+        {{ formset.management_form }}
+        {% if form.errors %}     
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-10 offset-1">
+                {{ form.as_p}}
+            </div>
+        
+            <div id="fs_labores" class="col-10 offset-1 text-start"> 
+                         
+                {% for fs in formset %}
+                    <div class="row py-2">
+                        <div class="col-8">{{fs.as_p}}</div>
+                    </div>
+                {% endfor %}               
+            </div>
+        </div>
+        <div class="col-2 offset-1">
+            <a id="buttonaddItemLabor" href="#" class="btn btn-sm">
+                agregar item <i class="bi bi-plus-circle-fill"></i>
+            </a> 
+        </div>
+
+        <div class="col text-center py-4">
+            <input type="submit" value="Submit" class="btn btn-secondary">
+        </div>
+    </form>   
+    
+
+    <div class="row">
+        <div class="col-1 offset-10">
+            <a href="#" class="btn btn-sm btn-danger">Volver</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}    
+    <script>
+         
+        $(document).ready(function() {
+            //$("#id_instrumentos").chained("#id_proveedor");
+            //$("#id_facturas").chained("#id_proveedor");
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+            $("#buttonaddItemLabor").click(e=>{
+                e.preventDefault();
+                addItem();
+            });            
+        });
+
+        function addItem(){
+            var formset = document.querySelector('#id_item-TOTAL_FORMS');
+            var value = formset.value;
+            var form =$('#fs_labores');
+            //PASO A CLONAR ELEMENTOS PARA CREAR NUEVOS Y AGREGARLOS AL FORM
+            var new_item_insumo = document.querySelector('#id_item-0-insumo').cloneNode(true)
+            new_item_insumo.name = "item-"+value+"-insumo"
+            new_item_insumo.id = "id_item-"+value+"-insumo"
+
+            var new_item_dosis = document.querySelector('#id_item-0-dosis').cloneNode(true)
+            new_item_dosis.name = "item-"+value+"-cantidad"
+            new_item_dosis.id = "id_item-"+value+"-cantidad"
+
+            
+            var div_row = document.createElement('div');
+            var div_col8 = document.createElement('div');
+
+            var input_hidden = document.querySelector('#id_item-0-id').cloneNode(true)
+            input_hidden.id = "id_item-"+value+"-id"
+            input_hidden.name = "item-"+value+"-id"
+            var input_hidden2 = document.querySelector('#id_item-0-orden').cloneNode(true)
+            input_hidden2.id = "id_item-"+value+"-orden"
+            input_hidden2.name = "item-"+value+"-orden"
+
+            var span1 = document.createElement('span');
+            span1.textContent = "Insumo: ";
+
+            var span2 = document.createElement('span');
+            span2.textContent = "Dosis: ";
+
+            div_row.className = "row py-2";
+            div_row.id = "row_id";
+            
+            div_col8.className = "col-8";
+
+            div_col8.append(span1);         
+            div_col8.append(new_item_insumo);
+            div_col8.append(span2);
+            div_col8.append(new_item_dosis);
+
+            //div_row.append(input_hidden);
+            //div_row.append(input_hidden2);
+
+            div_row.append(div_col8);
+           
+            form.append(div_row)
+
+            formset.value = parseInt(formset.value)+1;
+        };
+           
+    </script>
+{% endblock %}

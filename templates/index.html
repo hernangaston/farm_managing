@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block index %}
+    {% if user.is_authenticated %}
+        {% if request.session.dolar_compra %}        
+            <div class="row p-0 m-0 bgorange">        
+                <div id="carouselExampleSlidesOnly" class="carousel slide text-center" data-bs-ride="carousel">
+                    <div class="carousel-inner fs-6">
+                        <div class="carousel-item active" data-bs-interval="3000">
+                            <div class="row">
+                                <div class="col-3">Dólar oficial:</div>
+                                <div class="col-3 offset-1">compra: $ {{ request.session.dolar_compra }}</div> 
+                                <div class="col-3">venta: $ {{ request.session.dolar_venta }}</div>                         
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-bs-interval="3000">
+                            <div class="row">
+                                <div class="col-3">Dólar blue:</div>
+                                <div class="col-3 offset-1">compra: $ {{ request.session.dolar_blue_compra }}</div>
+                                <div class="col-3">venta: $ {{ request.session.dolar_blue_venta }}</div>
+                            </div>               
+                        </div>                    
+                    </div>
+                </div>
+            </div>        
+        {% endif %}   
+
+            
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">SELECCIONE EMPRESA</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">                    
+                    <div class="row">
+                        <div class="col-6">
+                            <form class="text-center" action="." method='GET'>
+                                <div class="form-floating">
+                                    <select id="floatingSelectEmpresa" class="form-select form-select-sm fs-5 pl-2 pt-0" aria-label=".form-select-sm example" name="empresa" id="">
+                                        {% for emp in empresas %}
+                                        <option value="{{emp.pk}}" class="fs-5 p-1">{{emp}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="floatingSelectEmpresa"></label>
+                                </div>                                    
+                                <button type="submit" class="btn btn-light btn-sm p-2">Seleccionar</button>
+                            </form>
+                        </div>
+                        {% if user.is_superuser %}
+                            <span>Si la empresa no se encuentra en la lista agregue una <a href="{% url 'fyp:create-empresa' %}">aqui</a></span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+    {% else %}
+    {{ block.super }}
+    {% endif %}
+{% endblock %}

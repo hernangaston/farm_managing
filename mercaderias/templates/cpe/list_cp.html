@@ -1,0 +1,87 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="row">
+    <h1 class="text-center py-2">{{ message }}</h1>
+    {% if object_list %}
+        <div class="col-10">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">CPE</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Titular</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Cosecha</th>
+                        <th scope="col">Procedencia</th>
+                        <th scope="col">Destino</th>
+                        <th scope="col">Kilos</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                {% for cp in object_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <th scope="row">{{ cp.numero }}</th>
+                        <td>{{ cp.fecha|date:"d-m-Y" }}</td>
+                        <td>{{ cp.titular }}</td>
+                        <td>{{ cp.grano }}</td>
+                        <td>{{ cp.cosecha }}</td>
+                        <td>{{ cp.establecimiento }}</td>
+                        <td>{{ cp.destino }}</td>
+                        <td>{{ cp.peso_neto }}</td>
+                        <td><a href="{% url 'mer:delete-cp' cp.pk %}" class="btn btn-sm btn-danger">
+                          X
+                        </a></td>
+                    </tr>
+                {% endfor %}
+                
+                </tbody>
+            </table>
+        </div>
+        <div class="col-2">
+            <h3 class="text-center">Selección</h3>
+            <form class="text-center" action="." method='GET'>
+              <div class="form-floating text-start">
+                <div>
+                <label for="floatingSelectProducto">Producto</label>
+                <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="producto" id="">Producto
+                  <option value="">--------</option>
+                  <option value="soja">Soja</option>
+                  <option value="trigo">Trigo</option>
+                  <option value="maiz">Maíz</option>
+                </select>
+                
+                </div>
+                <div>
+                <label for="floatingSelectCosecha">Cosecha</label>
+                <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">Cosecha
+                  <option value="">------------------</option>
+                  <option value="2015/2016">2015/2016</option>
+                  <option value="2016/2017">2016/2017</option>
+                  <option value="2017/2018">2017/2018</option>
+                  <option value="2018/2019">2018/2019</option>
+                  <option value="2019/2020">2019/2020</option>
+                  <option value="2020/2021">2020/2021</option>
+                  <option value="2021/2022">2021/2022</option>
+                </select>
+                
+                </div>
+                <div class="form-check form-switch">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Generar PDF</label>
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="informe">
+                </div>  
+              </div>            
+              <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+            </form>
+        </div>
+
+        <p>TONELADAS TOTALES: {{ tns_totales }}</p>
+    {% else %}
+        <p>NO HAY CARTAS DE PORTE</p>
+    {% endif %}
+</div>
+{% endblock %}

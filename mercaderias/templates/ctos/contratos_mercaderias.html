@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1>
+    
+    <form action="." method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-end">
+            <input type="submit" value="Submit" class="btn btn-secondary">
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+  
+{% endblock %}

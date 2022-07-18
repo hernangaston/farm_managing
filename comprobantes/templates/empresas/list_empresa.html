@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <br><br>
+    
+    
+
+    <div class="row p-0 m-0">
+        <div class="col-10 offset-1">
+            <h1 class="display-6 text-center">{{ message }}</h1>
+            {% for empresa in object_list %}
+                <p><b>Nombre: </b>{{ empresa.nombre|capfirst }} <b>Cuit: </b> {{ empresa.cuit }}</p>
+            {% empty %}
+            <P>AÚN NO HAY EMPRESAS.</P>
+            <p>Para agregar una pulse aquí
+                <a href="{% url 'fyp:create-empresa' %}" class="btn">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </a>
+            </p>
+            {% endfor %}
+        </div>
+        <div class="col-1 offset-11 py-5">
+            <a href="{% url 'fyp:index' %}" class="btn btn-danger">Inicio</a>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

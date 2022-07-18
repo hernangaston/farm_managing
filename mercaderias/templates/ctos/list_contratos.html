@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1 class="text-center py-2">{{ message }}</h1> 
+    {% if object_list %}  
+        <div class="row">
+            <div class="col-10">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Contrato</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Comprador</th>
+                            <th scope="col">Vendedor</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Kgs</th>
+                            <th scope="col">pendientes</th>
+                            <th scope="col">Fecha Entrega</th>
+                            <th scope="col">Detalle</th>
+                            <th scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contrato in object_list%}
+                        <tr>
+                            <th scope="row">{{ contrato.nro_comprador }}</th>
+                            <td>{{ contrato.fecha_contrato | date:"SHORT_DATE_FORMAT" }}</td>
+                            <td>{{ contrato.comprador }}</td>
+                            <td>{{ contrato.empresa }}</td>
+                            <td>{{ contrato.producto }}</td>
+                            <td>{{ contrato.tipo_contrato }}</td>
+                            <td>{{ contrato.precio }}</td>
+                            <td>{{ contrato.kilos_pactados }}</td>
+                            <td>{{ contrato.kgs_pendientes }}</td>
+                            <td>{{ contrato.fecha_inicio_cumplimiento | date:"SHORT_DATE_FORMAT" }}</td>
+                            <td><a class="btn btn-sm btn-link" href="{% url 'mer:detalle-contrato-cp' contrato.pk %}">Detalle</a></td>
+                            <td>
+                                <form method="POST" action="{% url 'mer:delete-contrato-cp' contrato.pk %}">
+                                    {% csrf_token %}<input class="btn btn-sm btn-link" type="submit" value="Eliminar">
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>                    
+                </table>
+            </div>
+            <div class="col-2">
+                <h2>Buscar por:</h2>
+                <form class="text-center" action="." method='GET'>
+                    <div class="form-floating">
+                      <select id="floatingSelectProducto" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="producto" id="">
+                        <option value="">------------</option>
+                        <option value="SOJA">Soja</option>
+                        <option value="TRIGO">Trigo</option>
+                        <option value="MAIZ">Maíz</option>
+                      </select>
+                      <label for="floatingSelectProducto">Producto</label>
+                    </div> 
+                    <div class="form-floating">
+                      <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">
+                        <option value="">------------</option>
+                        <option value="2018/2019">2018/2019</option>
+                        <option value="2019/2020">2019/2020</option>
+                        <option value="2020/2021">2020/2021</option>
+                        <option value="2021/2022">2021/2022</option>
+                      </select>
+                      <label for="floatingSelectCosecha">Cosecha</label>
+                    </div>
+                    <div class="form-floating">
+                        <select id="floatingSelectComprador" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="comprador" id="">
+                            <option value="">------------</option>
+                            {% for comprador in compradores %}
+                                <option value={{comprador.pk}}>{{ comprador }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="floatingSelectComprador">Comprador</label>
+                    </div>
+                    <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+                </form>
+                <div class="row text-center font-size-small">
+                    <a href="{% url 'mer:list-contratos-cp' %}" class="link-dark py-3">Limpiar filtros</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-end p-5">
+            <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Volver</a>
+        </div>
+    {% else %}
+        <div class="row">
+            <h3>NO HAY CONTRATOS</h3>
+            <div class="row text-start font-size-small">
+                <a href="{% url 'mer:list-contratos-cp' %}" class="link-dark py-3">Volver</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  
+{% endblock %}

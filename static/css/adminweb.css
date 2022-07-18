@@ -1,0 +1,104 @@
+body, html {
+    height: 100%;
+    font: 400 15px/1.8 sans-serif;
+  }
+.row {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.principal {
+  min-height: 100vh;
+  background: url(../img/bg7o.jpg) no-repeat center center fixed;
+  background-size: cover;
+  opacity: .6;
+}
+.gardient{
+  background: rgb(34,193,195);
+  background: -moz-linear-gradient(180deg, rgba(34,193,195,1) 0%, rgba(255,255,255,1) 100%);
+  background: -webkit-linear-gradient(180deg, rgba(34,193,195,1) 0%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#22c1c3",endColorstr="#ffffff",GradientType=1);
+}
+
+.invertgardient{
+  color: black;
+}
+
+.otrodiseñoprincipal{
+  height: 100vh;
+}
+
+.tituloprincipal {
+  font-size: 6rem;
+  font-weight: bold !important;
+}
+
+.titulosecundario{
+  font-size: 2rem;
+  padding-top: 10vh !important;
+}
+
+.secundaria_first{
+  min-height: 100vh;
+  background: url(../img/busines.jpg) no-repeat center center;
+  opacity: .6;
+  
+}
+
+.cover2{
+  background-image: url('../img/bg.jpg');
+  background-size: cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  opacity: .4;  
+}
+
+.sombras{
+  -webkit-box-shadow: -8px 14px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: -8px 14px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: -8px 14px 10px 0px rgba(0,0,0,0.75);
+}
+
+.columnas {
+  border-radius: 25px;
+  height: 350px;
+  border: 3px solid black;
+}
+.columnas:hover {
+  -webkit-box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+}
+
+.iconos{
+  font-size: 5rem;
+}
+
+.conenedorplanes {
+  border-radius: 25px;
+  height: 350px;
+  border: 3px solid black;
+}
+.conenedorplanes:hover {
+  -webkit-box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: -4px 8px 10px 0px rgba(0,0,0,0.75);
+}
+
+
+.footerclase{
+  height: 350px;
+}
+
+.copyrigthcss{  
+  height: 30px;  
+}
+
+.test1{
+  position: relative;
+}
+.test2{
+  position: absolute;
+  bottom: 3vh;
+  right: 5vw;
+}

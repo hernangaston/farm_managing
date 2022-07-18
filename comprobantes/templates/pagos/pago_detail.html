@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <br><br>
+    <h1 class="display-6 text-center">{{ message }}</h1>
+    <br><br>
+    <div class="container-fluid">
+        <p>Pago numero: {{ object.id }}</p>
+        <p>Pago fecha: {{ object.fecha }}</p>
+        <div class="row">
+            <div class="col-6">
+                <h6>Facturas canceladas:</h6>
+                
+                {% for factura in facturas %}
+                    <p>- {{factura}}</p>
+                {% endfor %}
+                
+            </div>
+            <div class="col-6">
+                <h6>Metodos utilizados:</h6>
+                
+                {% for metodo in instrumentos %}
+                    <p>- Fecha Venc.: {{metodo.fecha_instrumento}} | {{metodo.instrumento}} | Nro.: {{metodo.numero_instrumento}}
+                        |Importe: ${{metodo.importe}}
+                    </p>
+                {% endfor %}
+                
+            </div>
+        </div>
+        <br><br><br>
+
+        <div class="row">
+            <div class="col-3 offset-9">
+                <a href="{% url 'fyp:list-pagos' %}" class="btn btn-danger">Volver a listado</a>
+            </div>
+        </div>
+        
+    </div>  
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        /*$(function(){
+            $("#enviardatos").on('click', function(){
+                $.ajax({
+                    url: "{% url 'fyp:list-pagos' %}",
+                    type: "POST",
+                    data: {id:51},
+                    dataType: 'json'
+                }).done(function(data){
+                    console.log(data);
+                }).fail(function(xhqr, error_status, error_type){
+                    console.log(error_status +' : ' + error_type);
+                }).always(function(data){
+                    console.log('peticion completa');
+                });
+            });
+            
+        });*/
+    </script>   
+{% endblock %}

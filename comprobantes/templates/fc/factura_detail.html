@@ -1,0 +1,83 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+   
+    <h3 class="text-center">{{ message }}</h3>
+   
+    <div class="container-fluid">
+        <div class="row py-2">
+            <hr>
+            <div class="col-3">Factura numero: {{ object.numero }}</div>
+            <div class="col-3">Fecha: {{ object.fecha }}</div>
+            <div class="col-3">Proveedor: {{ object.proveedor }}</div>
+            <div class="col-3">Tipo de cambio: {{ object.tipo_cambio }}</div>
+        </div>
+        <div class="row py-2">
+            <p class="text-center fs-6"><b>Articulos</b></p>
+        {% for item in items %}           
+            <hr>
+            <div class="col-3 py-1">Articulo: {{ item.articulo }}</div>
+            <div class="col-2 py-1">Cantidad: {{ item.cantidad }}</div>
+            <div class="col-3 py-1">Precio: {{ item.precio_unitario }}</div>
+            <div class="col-3 py-1">Importe: {{ item.subtotal }}</div>   
+            <div class="col-1 py-1">
+                <a class="btn btn-sm btn-danger" href="{% url 'fyp:delete-itemfactura' item.id %}"><i class="bi bi-trash"></i></a>
+            </div>
+              
+        {% endfor %}
+        </div>
+        <div class="row py-2">
+            <hr>
+            <p class="text-center fs-6"><b>Importes</b></p>
+            <div class="col-3">Subtotal: {{ object.subtotal }}</div>
+            {% if object.otro_importe %}
+                <div class="col-3">Otro importe: {{ object.otro_importe }}</div>
+            {% endif %}
+            <div class="col-3">Impuesto: {{ object.imp }}</div>
+            <div class="col-3">Total: {{ object.total }}</div>
+        </div>
+
+        <div class="row py-2">
+            <p class="text-center fs-6"><b>Otros</b></p>
+            <hr>
+            <div class="col-3">Impuesto %: {{ object.impuesto }}</div>
+            <div class="col-3">Estado Pago: {{ object.estado }}</div>            
+            <div class="col-3">Fecha vto.: {{ object.fecha_vto }}</div>
+            <div class="col-3">Rubro: {{ object.rubro }}</div>
+        </div>
+        
+        <div class="row py-5">
+            <div class="col-3">                              
+                <a class="btn btn-sm btn-warning" href="{% url 'fyp:update-factura' object.id %}"><i class="bi bi-pencil-square"></i> Editar</a>      
+            </div>
+            <div class="col-3 offset-6">
+                <a href="{% url 'fyp:list-facturas' %}" class="btn btn-sm btn-danger">Volver a listado</a>
+            </div>
+        </div>
+        
+    </div>  
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        /*$(function(){
+            
+            $("#enviardatos").on('click', function(){
+                $.ajax({
+                    url: "{% url 'fyp:list-pagos' %}",
+                    type: "POST",
+                    data: {id:51},
+                    dataType: 'json'
+                }).done(function(data){
+                    console.log(data);
+                }).fail(function(xhqr, error_status, error_type){
+                    console.log(error_status +' : ' + error_type);
+                }).always(function(data){
+                    console.log('peticion completa');
+                });
+            });
+            
+        });*/
+    </script>   
+{% endblock %}

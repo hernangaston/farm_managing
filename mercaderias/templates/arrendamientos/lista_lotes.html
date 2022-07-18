@@ -1,0 +1,35 @@
+{% extends "index.html"%}
+
+{% block content %}
+    <div class="row text-center py-3">
+        <h3>{{ message }}</h3>
+    </div>
+    <div class="row">
+        <div class="col-10 px-3">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <th>#</th>
+                    <th>Lote</th>
+                    <th>Campo</th>
+                    <th>Hectareas</th>
+                    <th>Propietario</th>
+                </thead>
+                <tbody>
+                    {% for obj in object_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ obj.id }}</td>
+                        <td>{{ obj.campo }}</td>
+                        <td>{{ obj.hectareas }}</td>
+                        <td>{{ obj.propietario }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+    <div class="row">
+        <h5>Hectareas totales: {{total_has}}</h5>
+    </div>
+{% endblock %}

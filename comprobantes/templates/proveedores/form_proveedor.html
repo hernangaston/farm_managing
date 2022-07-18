@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="row p-0 m-0">
+
+    <h1 class="display-6 text-center py-5">{{ message }}</h1>
+    <div class="col-10 offset-1">
+        <form action="." method="post" novalidate>
+            {% csrf_token %}
+            {% if form.errors %}
+                <p>{{ form.errors }}</p>
+            {% endif %}
+            {{ form.as_p }}
+            <div class="col text-center">
+                <input type="submit" value="Submit" class="btn btn-secondary">
+            </div>
+        </form>
+    </div>
+    <div class="col-1 offset-10 text-end">
+        <a href="{% url 'fyp:list-proveedores' %}" class="btn btn-danger">Volver</a>
+    </div>
+</div>
+{% endblock %}

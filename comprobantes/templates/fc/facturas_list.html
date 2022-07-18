@@ -1,0 +1,113 @@
+{% extends 'index.html' %}
+{% block content %}
+    <div class="row p-0 m-0">
+        <h3 class="text-center py-2">{{ message }}</h3>
+        <div class="col-10 px-5">           
+            {% if object_list %}
+            <div class="table-responsive-sm">
+                <table id="tabla" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha Vto.</th>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Proveedor</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Rubro</th>
+                            <th scope="col">Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for factura in object_list %}                    
+                        <tr class="cell-table-sm">
+                            <th scope="row">{{ factura.fecha_vto | date:"SHORT_DATE_FORMAT" }}</th>
+                            <td>{{ factura.numero }}</td>
+                            <td>{{ factura.proveedor|truncatechars:25 }}</td>
+                            <td>{{ factura.total }}</td>
+                            <td>{{ factura.rubro|truncatechars:40 }}</td>
+                            <td>{{ factura.estado }}</td>
+                            <td>                     
+                                <a class="btn btn-sm btn-info" href="{% url 'fyp:detail-factura' factura.id %}"><i class="bi bi-eye-fill"></i></a>                
+                                <a class="btn btn-sm btn-warning" href="{% url 'fyp:update-factura' factura.id %}"><i class="bi bi-pencil-square"></i></a>                
+                                <a class="btn btn-sm btn-danger" href="{% url 'fyp:delete-factura' factura.id %}"><i class="bi bi-trash"></i></a>                            
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row">
+                <div class="text-end small-text py-2">
+                    <b>Total Facturas:</b> $ {{total_facturas}}
+                </div>
+            </div>
+            <div class="row p-3">
+                <div class="col-2"><a href="{% url 'fyp:add-facturas' %}" class="btn btn-sm btn-secondary">
+                    <i class="bi bi-plus-circle sm"></i> Nuevo</a></div>
+                <div class="col-1 offset-9">
+                    <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Inicio</a>
+                </div>
+            </div>
+            {% else %}
+                <h5>NO HAY FACTURAS INGRESADAS.</h5>
+                <p>Para agregar una pulse aquí
+                    <a href="{% url 'fyp:add-facturas' %}" class="btn">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </a>
+                </p>
+                <div class="row">
+                    <div class="col-1 offset-11">
+                        <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Inicio</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-2">
+          <h3 class="text-center">Selección</h3>
+          <form class="text-center" action="." method='GET'>
+            <div class="form-floating">
+              <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">Cosecha
+                <option value="">------------------</option>
+                <option value="2015/2016">2015/2016</option>
+                <option value="2016/2017">2016/2017</option>
+                <option value="2017/2018">2017/2018</option>
+                <option value="2018/2019">2018/2019</option>
+                <option value="2019/2020">2019/2020</option>
+                <option value="2020/2021">2020/2021</option>
+                <option value="2021/2022">2021/2022</option>
+              </select>
+              <label for="floatingSelectCosecha">Cosecha</label>
+            </div>
+            <div class="form-floating">
+                <select id="floatingSelectProveedor" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="proveedor" id="">Proveedor
+                  <option value="">------------------</option>
+                  {% for comp in lista_proveedores %}
+                    <option value={{comp.pk}}>{{ comp }}</option>
+                  {% endfor %}
+                </select>
+                <label for="floatingSelectProveedor">Proveedor</label>
+            </div>
+            <div class="form-floating">
+                <select id="floatingSelectRubro" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="rubros" id="">Rubros
+                  <option value="">------------------</option>
+                  {% for rubro in rubros %}
+                    <option value={{rubro}}>{{ rubro }}</option>
+                  {% endfor %}
+                </select>
+                <label for="floatingSelectRubro">Rubros</label>
+            </div>
+            <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+          </form>
+          <div class="row text-center font-size-small">
+            <a href="{% url 'fyp:list-facturas' %}" class="link-dark py-3">Limpiar filtros</a>
+          </div>
+        </div>        
+    </div>   
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        
+    </script>   
+{% endblock %}

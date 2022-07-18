@@ -1,0 +1,112 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="px-5">
+<h1 class="display-6 text-center py-5">{{ message }}</h1>
+
+
+    <form method="post" id="pagosForm" data-cities-url="{% url 'fyp:ajax_load_datas' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <p>{{ form.fecha.label }}:
+            {{ form.fecha }}
+        </p>
+        <p>{{ form.numero.label }}:
+            {{ form.numero }}
+        </p>
+        <p>{{ form.proveedor.label }}: 
+            {{ form.proveedor }}
+            
+            <a href="{% url 'fyp:add-proveedor' %}" class="btn">
+                <i class="bi bi-plus-circle-fill"></i>
+            </a>        
+        </p>
+        
+        <p>{{ form.instrumentos.label }}:
+        {{ form.instrumentos }}
+            <a href="{% url 'fyp:add-instrumento' %}" class="btn">
+                <i class="bi bi-plus-circle-fill"></i>
+            </a>
+        </p>
+        
+        <p>{{ form.facturas.label }}:
+            <span>{{ form.facturas }}</span>
+            <a href="{% url 'fyp:list-facturas' %}" class="btn">
+                <i class="bi bi-plus-circle-fill"></i>
+            </a>
+        </p>
+
+        <div class="col text-center">
+            <input type="submit" value="Submit" class="btn btn-secondary">
+        </div>
+    </form>
+    {% if form %}
+        <div class="col text-end">
+            <a href="{% url 'fyp:list-pagos' %}" class="btn btn-danger">Volver</a>
+        </div>
+    {% else %}
+        <div class="col text-end">
+            <a href="{% url 'fyp:list-pagos' %}" class="btn btn-danger">Volver a lista</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}    
+    <script>
+        $(document).ready(function() {
+            
+            //---------datepicker----------------
+            const elem = document.querySelector('input[name="fecha"]');
+            const datepicker = new Datepicker(elem, {
+                'autohide': true,
+                'format': 'dd/mm/yyyy'
+            });
+            $('#id_proveedor').on('change',()=>{
+                let id_prov = $("#id_proveedor option:selected").val();
+                const url = $("#pagosForm").attr("data-cities-url");
+                sendProveedorData(id_prov, url);
+            });
+        });
+        //FUNCION PARA LLENAR DE VALORES LOS SELECT DEPENDIENTES
+        //LA QUE MAS ME CONVENCE POR TODO (COMO LLAMA AL FORMULARIO, COMO TRATA LOS DATOS, COMO CONECTA CON EL SERVIDOR)
+        function sendProveedorData(id, url){            
+            $.ajax({
+                url: url,
+                data: { 
+                    'proveedor':id
+                },
+                success: function(data) {                   
+                    let html_data = '';
+                    data.instrumentos.forEach(function (inst) {                 
+                        html_data += `<option value="${inst.id}">${inst.numero_instrumento} - ${inst.instrumento} - ${inst.importe} - ${inst.institucion_instrumento}</option>`
+                    });
+                    $("#id_instrumentos").html(html_data);
+
+                    let html_fcs = '';                    
+                    data.facturas.forEach(function (fac) {                                            
+                        html_fcs += `<option value="${fac.id}">${fac.numero} Importe: $${fac.total}</option>`
+                    });                    
+                    
+                    $("#id_facturas").html(html_fcs);
+                    
+                },
+                error: function(xhr) {
+                    //Do Something to handle error
+                }
+            });
+
+        }
+    </script>
+{% endblock %}

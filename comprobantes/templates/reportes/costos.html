@@ -1,0 +1,132 @@
+{% extends "index.html" %}
+{% load static %}
+{% block head %}
+<script src="{% static 'lib/js/highcharts-9.3.3/code/highcharts.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/exporting.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/export-data.js' %}"></script>
+<script src="{% static 'lib/js/highcharts-9.3.3/code/modules/accessibility.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-10">
+        <h1 class="text-center py-2">{{ message }}</h1> 
+        <div class="col-2">
+            <h2>Seleccion de costos</h2>
+            <form class="text-center" action="." method='GET'>
+                <div class="form-floating">
+                    <select id="floatingSelectCultivo" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cultivo" id="">Cultivo
+                    <option value="">------------------</option>
+                    <option value="SOJA">SOJA</option>
+                    <option value="TRIGO">TRIGO</option>
+                    <option value="MAIZ">MAIZ</option>
+                    </select>
+                    <label for="floatingSelectCultivo">Cultivo</label>
+                </div>
+                <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+            </form>
+        </div>
+        {% if costo %}  
+           <p>Costo por ha: {{ costo }}</p>
+           <p>Tot costo: {{costo_tot}}</p>
+           <p>Total trigo entregado: {{ tot_trigo }}</p>
+           <p>Total trigo vendido en usd: {{ trigo_vendido }}</p>
+           <p>Total trigo pendiente vta. en usd: {{ trigo_pendiente }}</p>
+           <h3>SEMILLAS</h3>
+           {% for s in semillas %}
+                <p>Producto: {{s.articulo}} Cantidad: {{ s.cantidad }} Precio: {{ s.precio_unitario }} factura: {{s.factura.proveedor}}</p>
+           {% endfor %}
+           <h3>SIEMBRA</h3>
+           {% for f in siembra %}
+                <p>Producto: {{f.articulo}} Cantidad: {{ f.cantidad }} Precio: {{ f.precio_unitario }} factura: {{f.factura}} fecha: {{ f.factura.fecha }}</p>
+           {% endfor %}
+           <p> <b> Total fletes {{ cultivo }}: {{ fletes }}</b></p>
+           <h3>Agroquimicos</h3>
+           {% for f in agroq %}
+            <p>Producto: {{f.articulo}} Cantidad: {{ f.cantidad }} Precio: {{ f.precio_unitario }} factura: {{f.factura}} fecha: {{ f.factura.fecha }}</p>
+           {% endfor %}
+           <div>
+            <h3>LISTADO DE STOCK</h3>
+            {% for f in stock %}
+                <p>Producto: {{f.producto}} | Cantidad: {{ f.cantidad }} | Precio promedio: {{ f.p_promedio}}</p>
+                
+            {% endfor %}
+           </div>
+        {% else %}  
+            <p>NO HAY VALORES PARA GENERAR REPORTE</p>
+        {% endif %}
+        <div id="container"></div> 
+    </div>
+    <div class="col-2">
+        <h3 class="text-center">Selección</h3>
+        <form class="text-center" action="." method='GET'>
+          <div class="form-floating">
+            <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">Cosecha
+              <option value="">------------------</option>
+              <option value="2015/2016">2015/2016</option>
+              <option value="2016/2017">2016/2017</option>
+              <option value="2017/2018">2017/2018</option>
+              <option value="2018/2019">2018/2019</option>
+              <option value="2019/2020">2019/2020</option>
+              <option value="2020/2021">2020/2021</option>
+              <option value="2021/2022">2021/2022</option>
+            </select>
+            <label for="floatingSelectCosecha">Cosecha</label>
+          </div>
+          <div class="form-floating">
+            <select id="floatingSelectRubro" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="rubros" id="">Rubros
+              <option value="">------------------</option>
+              {% for rubro in rubros %}
+                <option value={{rubro}}>{{ rubro }}</option>
+              {% endfor %}
+            </select>
+            <label for="floatingSelectRubro">Rubros</label>
+          </div>
+          <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Composición de gastos por rubro.'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+                }
+            },
+            series: [{
+                name: 'Comprobantes por rubro',
+                colorByPoint: true,
+                data: {{ totxrubros | safe }}
+            }]
+        });
+    });
+</script>
+{% endblock %}

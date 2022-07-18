@@ -1,0 +1,120 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    
+   
+    <div class="row p-0 m-0">
+        
+            <h1 class="text-center py-3">{{ message }}</h1>
+            <div class="col-10 px-5">
+                <div class="table-responsive-sm">
+                    <table id="tabla" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Numero</th>
+                                <th scope="col">Proveedor</th>
+                                <th scope="col">Importe</th>
+                                <th scope="col">Facturas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pago in object_list %}
+                            <tr class="cell-table-sm">
+                                <td>{{ pago.pk }}</td>
+                                <th scope="row">{{ pago.fecha | date:"SHORT_DATE_FORMAT" }}</th>
+                                <td>{{ pago.numero }}</td>
+                                <td>{{ pago.proveedor }}</td>
+                                <td>{{ pago.importe_instrumentos }}</td>
+                                <td>{{ pago.importe_facturas }}</td>
+                                <td>                     
+                                    <a class="btn btn-sm btn-info" href="{% url 'fyp:detail-pago' pago.id %}"><i class="bi bi-eye-fill"></i></a>                
+                                    <a class="btn btn-sm btn-warning" href="{% url 'fyp:update-pago' pago.id %}"><i class="bi bi-pencil-square"></i></a>                
+                                    <a class="btn btn-sm btn-danger" href="{% url 'fyp:delete-pago' pago.id %}"><i class="bi bi-trash"></i></a>                            
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr>AÚN NO HAY PAGOS REALIZADOS.</tr>
+                                <tr>Para agregar uno pulse aquí
+                                    <a href="{% url 'fyp:add-pagos' %}" class="btn">
+                                        <i class="bi bi-plus-circle-fill"></i>
+                                    </a>
+                                </tr>                            
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-2 px-3">
+                <h3 class="text-center">Selección</h3>
+                <form class="text-center" action="." method='GET'>
+                <div class="form-floating">
+                    <select id="floatingSelectCosecha" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="cosecha" id="">Cosecha
+                    <option value="">------------------</option>
+                    <option value="2015/2016">2015/2016</option>
+                    <option value="2016/2017">2016/2017</option>
+                    <option value="2017/2018">2017/2018</option>
+                    <option value="2018/2019">2018/2019</option>
+                    <option value="2019/2020">2019/2020</option>
+                    <option value="2020/2021">2020/2021</option>
+                    <option value="2021/2022">2021/2022</option>
+                    </select>
+                    <label for="floatingSelectCosecha">Cosecha</label>
+                </div>
+                <div class="form-floating">
+                    <select id="floatingSelectProveedor" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="proveedor" id="">Proveedor
+                        <option value="">------------------</option>
+                        {% for prov in object_list %}
+                        <option value={{prov.proveedor.pk}}>{{ prov.proveedor }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingSelectProveedor">Proveedor</label>
+                </div>
+                <div class="form-floating">
+                    <select id="floatingSelectRubro" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="rubros" id="">Rubros
+                        <option value="">------------------</option>
+                        {% for rubro in rubros %}
+                        <option value={{rubro}}>{{ rubro }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="floatingSelectRubro">Rubros</label>
+                </div>
+                <button type="submit" class="btn btn-light btn-sm">Filtrar</button>
+                </form>
+                <div class="row text-center font-size-small">
+                <a href="{% url 'fyp:list-pagos' %}" class="link-dark py-3">Limpiar filtros</a>
+                </div>
+            </div>   
+        
+        {% if object_list %}
+            <div class="row py-3">
+                <div class="col-2 offset-1"><a href="{% url 'fyp:add-pagos' %}" class="btn btn-secondary">
+                    <i class="bi bi-plus-circle sm"></i> Nuevo</a></div>
+                <div class="col-2 offset-5">
+                    <a href="{% url 'fyp:index' %}" class="btn btn-danger">Inicio</a>
+                </div>
+            </div>
+            
+        {% else %}
+        <div class="row py-3">
+            <div class="col-2 offset-9">
+                <a href="{% url 'fyp:index' %}" class="btn btn-danger">Inicio</a>
+            </div>
+        </div>
+        
+    </div>
+
+    {% endif %}
+    
+    
+    
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+       
+    </script>   
+{% endblock %}

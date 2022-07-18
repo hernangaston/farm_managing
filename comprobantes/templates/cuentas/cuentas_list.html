@@ -1,0 +1,95 @@
+{% extends 'index.html' %}
+
+
+{% block content %} 
+    <div class="row p-0 m-0">
+        <h2 class="text-center py-3">{{ message }}</h2>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-6 px-5">
+                    <h2 class="text-center">FACTURAS</h2>
+                    <ol>
+                    {% if facturas %}
+                        {% for factura in facturas %}
+                            <li class="px-2">
+                                <div class="row">
+                                    <div class="col-3">{{ factura.fecha_vto | date:"SHORT_DATE_FORMAT" }}</div>
+                                    <div class="col-3">{{ factura.numero }}</div>
+                                    <div class="col-3">{{ factura.total | floatformat:"2"  }}</div>
+                                    <div class="col-3">{{ factura.total_usd | floatformat:"2"  }}</div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    </ol>
+                </div>
+                <div class="col-6">
+                    <h2 class="text-center">PAGOS</h2>
+                    <ol>
+                        {% if pagos %}
+                            {% for pago in pagos %}
+                            <li class="px-2">
+                                <div class="row">
+                                    <div class="col-4">{{ pago.fecha | date:"d/m/Y" }}</div>
+                                    <div class="col-4">{{ pago.numero }}</div>
+                                    <div class="col-4">{{ pago.importe_instrumentos | floatformat:"2"  }}</div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        {% endif %}                    
+                    </ol>
+                </div>  
+                <div class="col-4 offset-1"><p class="text-start">Total facturas: {{ tot_cpm | floatformat:"2" }}</p></div>
+                <div class="col-4 offset-1"><p class="text-start">Total Ordenes de pago: {{ tot_pagos | floatformat:"2" }}</p></div>
+                <h3 class="text-end px-5">Saldo final: {{ saldos | floatformat:"2" }}</h3>
+                              
+            </div>            
+        </div>
+        <div class="col-2 px-5">
+            <h3 class="text-center">Selección</h3>
+            <form class="text-center py-3" action="." method='GET'>
+              <div class="form-floating">
+                  <select id="floatingSelectProveedor" class="form-select form-select-sm my-1" aria-label=".form-select-sm example" name="proveedor" id="">Proveedor
+                    <option value="">------------------</option>
+                    {% for comp in proveedores %}
+                      <option value={{comp.pk}}>{{ comp }}</option>
+                    {% endfor %}
+                  </select>
+                  <label for="floatingSelectProveedor">Proveedor</label>
+                </div>
+              <button type="submit" class="btn btn-light btn-sm py-3">Filtrar</button>
+            </form>
+            <div class="row text-center font-size-small">
+              <a href="{% url 'fyp:cuenta-corriente-proveedor' %}" class="link-dark py-3">Limpiar filtros</a>
+            </div>
+        </div>
+    </div>
+    <div class="row p-0 m-0">
+        <div class="col-1 offset-11 py-5">
+            <a href="{% url 'fyp:index' %}" class="btn btn-sm btn-danger">Inicio</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!--<script>    
+        $(function(){
+            $('#proveedores').on("change", () => {
+                sendData();
+            });
+        });
+
+        function sendData() {
+            event.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: "{% url 'fyp:cuenta-corriente-proveedor' %}",
+                data: $("#prov").serialize(),
+                success: function(data) {
+                    console.log('Exito???');
+                }
+            });
+        };
+    </script>   -->
+{% endblock %}

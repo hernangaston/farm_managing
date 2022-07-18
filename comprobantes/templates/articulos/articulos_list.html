@@ -1,0 +1,71 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <div class="row p-0 m-0 ">  
+        <h1 class="text-center py-3">{{ message }}</h1>      
+        <div class="col-3 offset-9">
+            <form action="." method="GET">
+                <p>
+                    <input type="text" name="arti" placeholder="Search">
+                    <input type="submit" value="Search" class="btn btn-sm btn-secondary" >
+                </p>
+            </form>
+            <div class="row text-center font-size-small">
+                <a href="{% url 'fyp:list-articulos' %}" class="link-dark py-3">Limpiar filtros</a>
+            </div>
+        </div>
+    </div>
+   
+    {% if object_list %}
+        <div class="row p-0 m-0">
+            <div class="col-10 offset-1">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">Articulo</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for articulo in object_list %}
+                        <tr>
+                            <td>{{ articulo }}</td>
+                            <td>{{ articulo.tipo }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-info" href="{% url 'fyp:detail-articulo' articulo.id %}"><i class="bi bi-eye-fill"></i></a>                
+                                <a class="btn btn-sm btn-warning" href="{% url 'fyp:update-articulo' articulo.id %}"><i class="bi bi-pencil-square"></i></a>                
+                                <a class="btn btn-sm btn-danger" href="{% url 'fyp:delete-articulo' articulo.id %}"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1 offset-1 py-3"><a href="{% url 'fyp:add-articulo' %}" class="btn btn-secondary">
+                <i class="bi bi-plus-circle sm"></i> Nuevo</a></div>
+            <div class="col-1 offset-8 py-3">
+                <a href="{% url 'fyp:index' %}" class="btn btn-danger">Inicio</a>
+            </div>            
+        </div>
+    {% else %}
+    <div class="row p-0 m-0">
+        <h5>NO HAY ARTICULOS INGRESADOS.</h5>
+        <p>Para agregar una pulse aquí
+            <a href="{% url 'fyp:add-articulo' %}" class="btn">
+                <i class="bi bi-plus-circle-fill"></i>
+            </a>
+        </p>
+        <div class="row p-0 m-0">
+            <div class="col-1 offset-11">
+                <a href="{% url 'fyp:index' %}" class="btn btn-danger">Inicio</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}    
+{% endblock %}
+
+{% block scripts %}
+   
+{% endblock %}
