@@ -10,3 +10,4 @@
 - Cuentas corrientes de proveedores.
 - Revision y reportes de produccion por cada campo.
 - Graficos estadísticos para alizar al instante.
+- Reporte de labores por contratista, por lote y por productos utilizados.
